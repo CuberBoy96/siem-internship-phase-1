@@ -27,3 +27,5 @@ index=* EventCode=1
 | where like(cmd, "%wevtutil%") OR like(cmd, "%clear-eventlog%") OR like(cmd, "%remove-eventlog%")
 | table _time, host, ParentImage, Image, CommandLine, User
 | sort -_time
+
+
