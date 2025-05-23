@@ -122,5 +122,3 @@ Feel free to explore each use case folder to see queries, screenshots, and docum
 ---
 
 🌐 [LinkedIn](#) | 📧 [Email](#) | 📆 2025
-
-
