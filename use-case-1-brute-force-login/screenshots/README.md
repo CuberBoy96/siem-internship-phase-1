@@ -75,3 +75,4 @@ Relevant screenshots are stored in the `/screenshots/` folder:
 * `event_logs_windows.png` – shows Event ID 4625/4624 entries in Windows
 * `splunk_query_result.png` – shows query output in Splunk
 * `splunk_alert_config.png` – shows configured alert in Splunk
+
