@@ -1,3 +1,34 @@
+# Detection Use Case: Brute Force Login Detection
+
+## Scenario Description
+
+A brute-force attack was simulated from a Kali Linux VM targeting a Windows 10 VM. Multiple failed login attempts (Event ID 4625) were triggered using `crackmapexec`, followed by a successful login using a privileged account. The goal is to detect a sequence of failed logins followed by a successful login from the same source IP within a short time frame.
+
+## Objective
+
+Detect when a brute-force login attempt is followed by a successful login using a privileged account (e.g., administrator) within 5 minutes, to identify potential account compromise.
+
+## Tools Used
+
+* **SIEM**: Splunk Free
+* **Log Source**: Windows Event Logs (Security), Sysmon
+* **Lab Setup**:
+
+  * Windows 10 VM (target) with Splunk Universal Forwarder
+  * Kali Linux VM (attacker) with crackmapexec
+  * Host machine running Splunk Web Interface for monitoring
+
+## Event ID / Data Source Mapping
+
+| Source       | Event ID / Field | Description                |
+| ------------ | ---------------- | -------------------------- |
+| Windows Logs | 4625             | Failed login attempt       |
+| Windows Logs | 4624             | Successful login           |
+| Sysmon       | Event ID 1       | (Used in other detections) |
+
+## Detection Logic / Query
+
+```spl
 index=* (EventCode=4625 OR EventCode=4624)
 | eval
     status=if(EventCode=4625, "Failed", "Success"),
@@ -22,11 +53,25 @@ index=* (EventCode=4625 OR EventCode=4624)
     last_failed_time=strftime(last_failed_time, "%Y-%m-%d %H:%M:%S"),
     admin_success_time=strftime(admin_success_time, "%Y-%m-%d %H:%M:%S")
 | table
-    Source_Network_Address,
-    failed_count,
-    failed_usernames,
-    admin_accounts,
-    last_failed_time,
-    admin_success_time,
+    Source_Network_Address
+    failed_count
+    failed_usernames
+    admin_accounts
+    last_failed_time
+    admin_success_time
     time_window
 | sort -failed_count
+```
+
+## Result
+
+This query successfully detects brute-force attempts from the same IP followed by privileged login, returning 1 result during test execution. An alert was created in Splunk based on this query to notify when this pattern is detected.
+
+## Screenshots
+
+Relevant screenshots are stored in the `/screenshots/` folder:
+
+* `attack_simulation_kali.png` – shows crackmapexec brute-force command
+* `event_logs_windows.png` – shows Event ID 4625/4624 entries in Windows
+* `splunk_query_result.png` – shows query output in Splunk
+* `splunk_alert_config.png` – shows configured alert in Splunk
