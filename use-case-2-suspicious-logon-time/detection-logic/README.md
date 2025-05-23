@@ -45,4 +45,6 @@ This query successfully detected an after-hours logon using the Administrator ac
 
 Relevant screenshots are stored in the `/screenshots/` folder:
 
-* `after_hours_admin_logon.png` – query result showing simulated after-hours login by an admin
+* `after_hours_admin_logon.png` – query result showing simulated after-hours login by an admin *
+
+  
