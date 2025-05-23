@@ -58,4 +58,6 @@ This query successfully detected failed login attempts followed by a successful 
 
 Stored in `/screenshots/` folder:
 
-* `lateral_movement_detection.png` – shows failed + successful login correlation for `localuser`.
+* `lateral_movement_detection.png` – shows failed + successful login correlation for `localuser`. *
+
+  
