@@ -1,0 +1,6 @@
+index=* (EventCode=4720 OR EventCode=4732)
+| eval event_desc=case(EventCode=4720, "Account Created", EventCode=4732, "Added to Group")
+| eval target_user=case(EventCode=4720, SAM_Account_Name, EventCode=4732, Member_Name)
+| eval actor=Account_Name
+| table _time, host, event_desc, target_user, actor, Group_Name, TaskCategory
+| sort -_time
