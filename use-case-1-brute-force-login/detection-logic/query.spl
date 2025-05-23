@@ -31,4 +31,3 @@ index=* (EventCode=4625 OR EventCode=4624)
     time_window
 | sort -failed_count
 
-
