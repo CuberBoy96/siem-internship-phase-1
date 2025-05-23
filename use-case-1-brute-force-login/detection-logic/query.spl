@@ -1,0 +1,32 @@
+index=* (EventCode=4625 OR EventCode=4624)
+| eval
+    status=if(EventCode=4625, "Failed", "Success"),
+    username=lower(coalesce(Account_Name, User)),
+    is_admin=if(match(username, "admin|administrator|root|svc"), 1, 0)
+| eval
+    is_failed_non_admin=if(status="Failed" AND is_admin=0, 1, 0),
+    is_admin_success=if(status="Success" AND is_admin=1, 1, 0)
+| stats
+    max(eval(if(is_failed_non_admin=1, _time, null()))) as last_failed_time
+    max(eval(if(is_admin_success=1, _time, null()))) as admin_success_time
+    count(eval(is_failed_non_admin=1)) as failed_count
+    values(eval(if(is_failed_non_admin=1, username, null()))) as failed_usernames
+    values(eval(if(is_admin_success=1, username, null()))) as admin_accounts
+    by Source_Network_Address
+| where
+    failed_count >=10
+    AND isnotnull(admin_success_time)
+    AND (admin_success_time - last_failed_time) <= 300
+| eval
+    time_window=admin_success_time - last_failed_time,
+    last_failed_time=strftime(last_failed_time, "%Y-%m-%d %H:%M:%S"),
+    admin_success_time=strftime(admin_success_time, "%Y-%m-%d %H:%M:%S")
+| table
+    Source_Network_Address,
+    failed_count,
+    failed_usernames,
+    admin_accounts,
+    last_failed_time,
+    admin_success_time,
+    time_window
+| sort -failed_count
