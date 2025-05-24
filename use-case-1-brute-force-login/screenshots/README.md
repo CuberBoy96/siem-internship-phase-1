@@ -71,8 +71,8 @@ This query successfully detects brute-force attempts from the same IP followed b
 
 Relevant screenshots are stored in the `/screenshots/` folder:
 
-* `attack_simulation_kali.png` – shows hydra brute-force command
-* `event_logs_windows.png` – shows Event ID 4625/4624 entries in Windows
-* `splunk_query_result.png` – shows query output in Splunk
-* `splunk_alert_config.png` – shows configured alert in Splunk
+* `Attack_simulation.png` – shows hydra brute-force command
+* `Event_logs_windows(4624)_successful_logon.png` – shows Event ID 4624 entries in Windows
+* `Event_logs_windows(4625)_failed_logon.png` – shows Event ID 4625 entries in Windows
+* `Attack_simulation_successful_login.png` – shows successful login thru ssh connection
 
