@@ -2,7 +2,7 @@
 
 ## Scenario Description
 
-A brute-force attack was simulated from a Kali Linux VM targeting a Windows 10 VM. Multiple failed login attempts (Event ID 4625) were triggered using `crackmapexec`, followed by a successful login using a privileged account. The goal is to detect a sequence of failed logins followed by a successful login from the same source IP within a short time frame.
+A brute-force attack was simulated from a Kali Linux VM targeting a Windows 10 VM. Multiple failed login attempts (Event ID 4625) were triggered using `hydra`, followed by a successful login using a privileged account. The goal is to detect a sequence of failed logins followed by a successful login from the same source IP within a short time frame.
 
 ## Objective
 
@@ -15,7 +15,7 @@ Detect when a brute-force login attempt is followed by a successful login using 
 * **Lab Setup**:
 
   * Windows 10 VM (target) with Splunk Universal Forwarder
-  * Kali Linux VM (attacker) with crackmapexec
+  * Kali Linux VM (attacker) with hydra
   * Host machine running Splunk Web Interface for monitoring
 
 ## Event ID / Data Source Mapping
@@ -71,7 +71,7 @@ This query successfully detects brute-force attempts from the same IP followed b
 
 Relevant screenshots are stored in the `/screenshots/` folder:
 
-* `attack_simulation_kali.png` – shows crackmapexec brute-force command
+* `attack_simulation_kali.png` – shows hydra brute-force command
 * `event_logs_windows.png` – shows Event ID 4625/4624 entries in Windows
 * `splunk_query_result.png` – shows query output in Splunk
 * `splunk_alert_config.png` – shows configured alert in Splunk
