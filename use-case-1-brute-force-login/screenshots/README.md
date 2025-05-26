@@ -33,7 +33,7 @@ index=* (EventCode=4625 OR EventCode=4624)
 | eval
     status=if(EventCode=4625, "Failed", "Success"),
     username=lower(coalesce(Account_Name, User)),
-    is_admin=if(match(username, "admin|administrator|root|svc"), 1, 0)
+    is_admin=if(match(username, "admin|administrator|root|xyz|abhay"), 1, 0)
 | eval
     is_failed_non_admin=if(status="Failed" AND is_admin=0, 1, 0),
     is_admin_success=if(status="Success" AND is_admin=1, 1, 0)
@@ -75,4 +75,8 @@ Relevant screenshots are stored in the `/screenshots/` folder:
 * `Event_logs_windows(4624)_successful_logon.png` – shows Event ID 4624 entries in Windows
 * `Event_logs_windows(4625)_failed_logon.png` – shows Event ID 4625 entries in Windows
 * `Attack_simulation_successful_login.png` – shows successful login thru ssh connection
+* `Splunk_alert_config.png` – shows successful configure alert in Splunk
+* `Splunk_failed_logon_alert.png` – shows failed logon attempts
+* `Splunk_successful_logon_alert.png` – shows successful login attempt
+* `Splunk_query_result.png` – shows query output in Splunk
 
