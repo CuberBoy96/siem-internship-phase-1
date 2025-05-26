@@ -2,7 +2,7 @@
 
 ## Scenario Description
 
-An attacker or insider may attempt to access systems during unusual hours when monitoring is less active. This scenario simulates a privileged user (e.g., Administrator) logging in outside normal business hours (e.g., before 9:00 AM or after 7:00 PM). This type of activity is suspicious and may indicate lateral movement, persistence, or stealthy access.
+An attacker or insider may attempt to access systems during unusual hours when monitoring is less active. This scenario simulates a privileged user (e.g., Abhay) logging in outside normal business hours (e.g., before 9:00 AM or after 7:00 PM). This type of activity is suspicious and may indicate lateral movement, persistence, or stealthy access.
 
 ## Objective
 
@@ -31,7 +31,7 @@ index=* EventCode=4624
 | eval fake_time=_time - 46800
 | eval readable_time=strftime(fake_time, "%Y-%m-%d %H:%M:%S")
 | eval hour=tonumber(strftime(fake_time, "%H"))
-| eval is_admin=if(match(Account_Name, "Administrator|support1|admin"), 1, 0)
+| eval is_admin=if(match(Account_Name, "Administrator|abhay|admin"), 1, 0)
 | where hour < 9 OR hour >= 19
 | where is_admin=1
 | table readable_time, Account_Name, Source_Network_Address, host, hour
@@ -39,7 +39,7 @@ index=* EventCode=4624
 
 ## Result
 
-This query successfully detected an after-hours logon using the Administrator account, returning 1 result. The time was artificially simulated by subtracting 13 hours from `_time` to test detection without needing to perform an actual midnight login.
+This query successfully detected an after-hours logon using the Administrator(abhay)account, returning 1 result. The time was artificially simulated by subtracting 13 hours from `_time` to test detection without needing to perform an actual midnight login.
 
 ## Screenshots
 
