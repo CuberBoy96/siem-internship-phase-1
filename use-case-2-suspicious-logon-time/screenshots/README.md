@@ -28,7 +28,7 @@ index=* EventCode=4624
 | eval readable_time=strftime(fake_time, "%Y-%m-%d %H:%M:%S")
 | eval hour=tonumber(strftime(fake_time, "%H"))
 | eval username_clean=lower(replace(Account_Name, ".*\\", ""))
-| eval is_admin=if(match(username_clean, "admin|administrator|support1"), 1, 0)
+| eval is_admin=if(match(username_clean, "Administrator|abhay|admin"), 1, 0)
 | where hour < 9 OR hour >= 19
 | where is_admin=1
 | table readable_time, username_clean, Account_Name, Source_Network_Address, host, hour
