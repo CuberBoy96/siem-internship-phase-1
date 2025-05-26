@@ -2,7 +2,7 @@ index=* (EventCode=4625 OR EventCode=4624)
 | eval
     status=if(EventCode=4625, "Failed", "Success"),
     username=lower(coalesce(Account_Name, User)),
-    is_admin=if(match(username, "admin|administrator|root|svc"), 1, 0)
+    is_admin=if(match(username, "admin|administrator|root|xyz|abhay"), 1, 0)
 | eval
     is_failed_non_admin=if(status="Failed" AND is_admin=0, 1, 0),
     is_admin_success=if(status="Success" AND is_admin=1, 1, 0)
