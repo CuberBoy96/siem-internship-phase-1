@@ -32,3 +32,4 @@ index=* EventCode=4624
 | where hour < 9 OR hour >= 19
 | where is_admin=1
 | table readable_time, username_clean, Account_Name, Source_Network_Address, host, hour
+
