@@ -70,7 +70,7 @@ siem-internship-phase-1/
 ├── use-case-2-suspicious-logon-time/
 ├── use-case-3-lateral-movement-rdp/
 ├── use-case-4-log-tampering/
-├── use-case-5-hidden-user-creation/
+├── use-case-5-hidden-user/
 └── README.md
 ```
 
