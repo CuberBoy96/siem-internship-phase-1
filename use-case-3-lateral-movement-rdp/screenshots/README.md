@@ -28,25 +28,51 @@ Detect a pattern where an attacker tries to authenticate multiple times (failed 
 ## Detection Logic / Query
 
 ```spl
-index=* (EventCode=4625 OR EventCode=4624) Logon_Type=3
-| eval status=if(EventCode=4625, "Failed", "Success")
-| eval username=lower(coalesce(Account_Name, TargetUserName))
-| eval is_failed=if(status="Failed", 1, 0)
-| eval is_success=if(status="Success", 1, 0)
-| stats
-    max(eval(if(is_failed=1, _time, null()))) as last_failed_time,
-    max(eval(if(is_success=1, _time, null()))) as success_time,
-    count(eval(is_failed=1)) as failed_count,
-    values(eval(if(is_failed=1, username, null()))) as failed_users,
-    values(eval(if(is_success=1, username, null()))) as success_users
-    by Source_Network_Address
-| where failed_count >= 3
-    AND isnotnull(success_time)
-    AND (success_time - last_failed_time) <= 300
-| eval last_failed_time=strftime(last_failed_time, "%Y-%m-%d %H:%M:%S"),
-        success_time=strftime(success_time, "%Y-%m-%d %H:%M:%S"),
-        time_gap=success_time." - ".last_failed_time
-| table Source_Network_Address, failed_count, failed_users, success_users, last_failed_time, success_time, time_gap
+index=* (EventCode=4625 OR EventCode=4624) Logon_Type IN (3,10)
+| eval status=case(EventCode=4625, "Failed", EventCode=4624, "Success")
+| eval user=coalesce(Account_Name, TargetUserName)
+| eval src_ip=coalesce(Source_Network_Address, IpAddress)
+
+| where isnotnull(src_ip) AND src_ip!="-"
+| sort 0 src_ip _time
+
+| streamstats current=f last(eval(if(status="Failed", _time, null()))) as last_failed_time by src_ip
+| streamstats count(eval(status="Failed")) as failed_count by src_ip
+
+| where status="Success"
+    AND failed_count >= 3
+    AND isnotnull(last_failed_time)
+    AND _time > last_failed_time
+    AND (_time - last_failed_time) <= 300
+
+| eval success_time=_time
+| eval time_diff_sec = success_time - last_failed_time
+
+| eventstats dc(user) as distinct_users by src_ip
+
+| stats 
+    latest(failed_count) as failed_count,
+    values(username) as users,
+    values(distinct_users) as distinct_users,
+    min(last_failed_time) as first_failed_time,
+    max(success_time) as success_time
+    by src_ip
+
+| eval attack_type=case(
+    distinct_users>=5, "Password Spraying",
+    failed_count>=5, "Brute Force",
+    true(), "Other"
+)
+
+| eval severity=case(
+    failed_count>=10, "High",
+    failed_count>=5, "Medium",
+    true(), "Low"
+)
+
+| eval first_failed_time=strftime(first_failed_time,"%Y-%m-%d %H:%M:%S"),
+       success_time=strftime(success_time,"%Y-%m-%d %H:%M:%S")
+
 | sort -failed_count
 ```
 
