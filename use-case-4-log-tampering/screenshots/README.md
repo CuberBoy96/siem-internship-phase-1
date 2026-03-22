@@ -8,7 +8,7 @@ Detect attempts to clear or remove Windows Event Logs using command-line utiliti
 
 ## Tools Used
 - **SIEM**: Splunk Free
-- **Log Source**: Sysmon (Event ID 1 - process creation)
+- **Log Source**: Sysmon (Event ID 1102 - security log cleared), (Event ID 4688 - process creation), (Event ID 104 - log cleared) 
 - **Lab Setup**:
   - Windows 10 VM with Sysmon + Splunk Universal Forwarder
   - Splunk Web on host machine receiving forwarded logs
