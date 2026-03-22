@@ -15,18 +15,38 @@ Detect attempts to clear or remove Windows Event Logs using command-line utiliti
 
 ## Event ID / Data Source Mapping
 
-| Source  | Event ID | Field       | Description                       |
-|---------|----------|-------------|-----------------------------------|
-| Sysmon  | 1        | CommandLine | Process creation (log tampering)  |
+| Source  | Event ID | Field       | Description                          |
+|---------|----------|-------------|--------------------------------------|
+| Sysmon  | 104      | CommandLine | log cleared (log tampering)          |
+| Sysmon  | 1102     | CommandLine | security log cleared (log tampering) |
+| Sysmon  | 4688     | CommandLine | process creation (log tampering)     |
 
 ## Detection Logic / Query
 
+## Basic Log Tampering Detection
+
+This query detects common Windows log tampering techniques including:
+
+- Security log clearing (EventCode 1102)
+- System/Application log clearing (EventCode 104)
+- Manual cleanup using wevtutil
+- PowerShell log removal commands
+- Resolves source IP to hostname using DNS lookup
+
 ```spl
-index=* EventCode=1
+index=* (EventCode=4688 OR EventCode=1102 OR EventCode=104)
 | eval cmd=lower(CommandLine)
-| where like(cmd, "%wevtutil%") OR like(cmd, "%clear-eventlog%") OR like(cmd, "%remove-eventlog%")
-| table _time, host, ParentImage, Image, CommandLine, User
-| sort -_time
+| eval Activity=case(
+    EventCode=1102, "Security Log Cleared",
+    EventCode=104, "System/App Log Cleared",
+    match(cmd, "wevtutil.*(cl|clear-log)"), "Manual Cleanup (wevtutil)",
+    match(cmd, "clear-eventlog|remove-eventlog"), "PowerShell Cleanup",
+    1=1, "Other"
+)
+| where Activity!="Other"
+| lookup dnslookup clientip AS src_ip OUTPUT clienthost AS src_host
+| table _time, host, User, Activity, CommandLine, ParentImage, src_ip
+| sort - _time
 
 
 
