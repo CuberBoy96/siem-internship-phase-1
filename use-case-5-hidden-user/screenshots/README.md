@@ -53,12 +53,6 @@ It focuses on identifying:
 
 ---
 
-## ⚡ Attack Simulation
-
-The following commands simulate suspicious activity.
-
-### 👤 Create New User
-
 ```cmd
 net user testuser2 p@ssw0rd /add
 ```
