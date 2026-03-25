@@ -1,124 +1,78 @@
-# SIEM Internship Phase-1
+👤 Hidden User Creation Detection (Splunk)
 
-Welcome to the **SIEM Internship Phase-1** repository. This project is part of a hands-on cybersecurity internship focused on building a personal SOC (Security Operations Center) lab, simulating adversarial techniques, and detecting them using Splunk as the SIEM. Each use case is designed to introduce core concepts in log collection, parsing, threat detection, and alerting.
+This project demonstrates how attackers create unauthorized users and add them to privileged groups, and how to detect this activity using Splunk.
 
----
+Attackers often create hidden users to maintain persistence and gain administrative privileges.
 
-## 🎓 Internship Objective
+🎯 What This Detects
+👤 New user account creation
+➕ Users added to privileged groups
+🔐 Privilege escalation attempts
+🕵️ Hidden or unauthorized admin users
+🧪 Attack Simulation — Hidden User Creation
 
-* Set up a functional SIEM environment (Splunk Free edition)
-* Collect logs from Windows machines via Universal Forwarder
-* Simulate adversarial techniques
-* Detect and alert on suspicious activity based on real-world attack patterns
-* Document detection engineering tasks professionally
+Attackers create a new user and add it to the Administrators group.
 
----
+Step 1 — Create a New User
+net user testuser2 p@ssw0rd /add
+Step 2 — Add User to Administrators Group
+net localgroup Administrators testuser2 /add
+Result
+A new user account is created
+The user is added to the Administrators group
+Administrative privileges are granted
+📊 Events Generated
 
-## 📚 Lab Architecture
+These commands generate important Windows Security Events:
 
-* **Host Machine**: Running Splunk Web Interface
-* **Windows 10 VM**: Target machine with Sysmon, Event Logs, and Splunk Universal Forwarder
-* **Kali Linux VM**: Used for attack simulation using tools like `hydra` and `crackmapexec`
+Event ID	Description
+4720	User account created
+4732	User added to group
 
-Logs from the Windows VM are shipped to the host Splunk instance using Splunk Universal Forwarder.
+These events are critical for detecting unauthorized account creation.
 
----
+🧠 Detection Query (Splunk)
 
-## 📊 Use Cases Implemented
+This Splunk query detects new user creation and group additions.
 
-### 1. Brute Force Login Detection
+index=* (EventCode=4720 OR EventCode=4732)
+| eval event_desc=case(
+    EventCode=4720, "Account Created",
+    EventCode=4732, "Added to Group"
+)
+| eval target_user=case(
+    EventCode=4720, SAM_Account_Name,
+    EventCode=4732, Member_Name
+)
+| eval actor=Account_Name
+| table _time, host, event_desc, target_user, actor, Group_Name, TaskCategory
+| sort - _time
 
-* **Technique**: Multiple failed login attempts followed by successful login
-* **Event IDs**: 4625 (Failure), 4624 (Success)
-* **Tools**: crackmapexec (Kali), Windows Security Logs
-* **Goal**: Detect brute force attempts followed by a successful privileged login from the same IP within 5 minutes
 
-### 2. Suspicious Logon Times
+🧰 Tools Used
+Windows 10
+Splunk Enterprise
+Command Prompt
+Windows Event Viewer
 
-* **Technique**: Privileged login outside business hours
-* **Event ID**: 4624
-* **Logic**: Detect admin logins beyond 7 PM or before 9 AM
+-------------
 
-### 3. Lateral Movement via RDP
+🚀 Skills Demonstrated
+Windows Security Monitoring
+Splunk Query Writing (SPL)
+User Activity Monitoring
+Threat Detection
+Blue Team Fundamentals
+📚 MITRE ATT&CK Mapping
+Technique	ID	Description
+Create Account	T1136	Creating new local user accounts
+Account Manipulation	T1098	Adding users to privileged groups
+🛡️ Why This Matters
 
-* **Technique**: RDP logins using valid credentials after failed attempts
-* **Event ID**: 4624 (LogonType=10), 4625
-* **Goal**: Detect lateral movement attempts and correlate with previous failures
+Attackers commonly create hidden users to:
 
-### 4. Log Tampering Simulation
+Maintain persistence
+Gain administrative access
+Return later without detection
 
-* **Technique**: Clearing Windows Event Logs using commands like `wevtutil cl`
-* **Event IDs**: Sysmon 1 (Process Execution), 1102 (Security log cleared)
-* **Goal**: Detect attempts to tamper or clear log files
-
-### 5. Hidden User Account Creation
-
-* **Technique**: Adding a new user to the Administrators group
-* **Event IDs**: 4720 (Account Created), 4732 (User added to group)
-* **Goal**: Detect creation of suspicious accounts and privilege escalation
-
----
-
-## 🗃️ Folder Structure
-
-```
-siem-internship-phase-1/
-├── use-case-1-brute-force-login/
-│   ├── screenshots/
-│   ├── detection-logic/
-│   └── writeups/
-├── use-case-2-suspicious-logon-time/
-├── use-case-3-lateral-movement-rdp/
-├── use-case-4-log-tampering/
-├── use-case-5-hidden-user/
-└── README.md
-```
-
-Each folder contains:
-
-* `screenshots/`: Attack simulation, log entries, query results, and alerts
-* `detection-logic/`: Detection queries used in Splunk (SPL)
-* `writeups/`: Scenario explanation, objective, tools used, detection mapping
-
----
-
-## 🌍 Tools Used
-
-* **SIEM**: Splunk Free
-* **Monitoring Tools**: Sysmon, Event Viewer
-* **Attack Tools**: crackmapexec, PowerShell, net user, wevtutil
-* **Forwarder**: Splunk Universal Forwarder for log shipping
-
----
-
-## 📄 Submission Checklist
-
-* [x] Screenshots of each detection scenario
-* [x] SPL queries for alert logic
-* [x] Markdown writeups per use case
-* [x] Logs demonstrating detection in Splunk
-
----
-
-## 🚀 Outcome
-
-By completing this project, I learned:
-
-* End-to-end log forwarding and detection engineering
-* SPL query writing and alert creation in Splunk
-* Threat simulation and mapping to MITRE ATT\&CK
-* GitHub documentation best practices
-
----
-
-## 🌟 Special Thanks
-
-To the mentors and community resources that helped along the way — and to the open-source community whose tools made this project possible.
-
----
-
-Feel free to explore each use case folder to see queries, screenshots, and documentation of the detection logic.
-
----
-
-📆 2025
+Detecting unauthorized account creation is a critical blue-team skill.
