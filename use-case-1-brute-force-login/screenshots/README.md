@@ -1,3 +1,12 @@
+# 🔍 Brute Force Detection Using Splunk
+
+![Platform](https://img.shields.io/badge/Platform-Windows-blue)
+![Tool](https://img.shields.io/badge/Tool-Splunk-green)
+![Use Case](https://img.shields.io/badge/Use%20Case-User%20Monitoring-orange)
+![Status](https://img.shields.io/badge/Status-Completed-success)
+
+---
+
 # Detection Use Case: Brute Force Login Detection
 
 ## Scenario Description
