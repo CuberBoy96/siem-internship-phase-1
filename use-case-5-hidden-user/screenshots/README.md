@@ -53,6 +53,8 @@ It focuses on identifying:
 
 ---
 
+### 🛡️ Add User OR User Creation
+
 ```cmd
 net user testuser2 p@ssw0rd /add
 ```
@@ -87,20 +89,6 @@ index=* (EventCode=4720 OR EventCode=4732)
 
 ---
 
-## 📷 Screenshots
-
-### 🔍 Splunk Detection Query Output
-
-<img src="images/splunk_query.png" width="800">
-
----
-
-### 💻 User Creation via Command Prompt
-
-<img src="images/user_creation.png" width="800">
-
----
-
 ## 📈 Expected Output
 
 | Time      | Host            | Event           | User      | Group          |
@@ -132,27 +120,6 @@ This detection helps:
 * 🛡️ Detect **privilege escalation**
 * 🔍 Improve **incident response**
 * 📊 Enhance **security monitoring**
-  
-
-```
-
-## 🧪 Testing Steps
-
-1️⃣ Create a new user
-
-```cmd
-net user testuser2 p@ssw0rd /add
-```
-
-2️⃣ Add user to admin group
-
-```cmd
-net localgroup Administrators testuser2 /add
-```
-
-3️⃣ Run Splunk query
-
-4️⃣ Verify detection logs appear
 
 ---
 
@@ -197,7 +164,7 @@ net localgroup Administrators testuser2 /add
 
 ## 👨‍💻 Author
 
-**Abhay**
+**Abhaykant Vishwakarma**
 
 Cybersecurity Enthusiast 🔐
 SOC Analyst | Threat Detection | SIEM
