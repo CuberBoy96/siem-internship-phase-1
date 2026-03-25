@@ -1,4 +1,4 @@
-# 🔍 Hidden User Detection Using Splunk
+# 🔍 Lateral Movement Detection Using Splunk
 
 ![Platform](https://img.shields.io/badge/Platform-Windows-blue)
 ![Tool](https://img.shields.io/badge/Tool-Splunk-green)
