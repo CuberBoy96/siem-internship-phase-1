@@ -1,4 +1,12 @@
-# SIEM Internship Phase-1
+# 🔍 SIEM Internship Phase-1
+
+![Platform](https://img.shields.io/badge/Platform-Windows-blue)
+![Platform](https://img.shields.io/badge/Platform-Linux-darkgreen)
+![Tool](https://img.shields.io/badge/Tool-Splunk-green)
+![Use Case](https://img.shields.io/badge/Use%20Case-User%20Monitoring-orange)
+![Status](https://img.shields.io/badge/Status-Completed-success)
+
+---
 
 Welcome to the **SIEM Internship Phase-1** repository. This project is part of a hands-on cybersecurity internship focused on building a personal SOC (Security Operations Center) lab, simulating adversarial techniques, and detecting them using Splunk as the SIEM. Each use case is designed to introduce core concepts in log collection, parsing, threat detection, and alerting.
 
