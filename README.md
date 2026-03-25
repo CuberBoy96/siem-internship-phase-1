@@ -119,6 +119,16 @@ To the mentors and community resources that helped along the way — and to the 
 
 Feel free to explore each use case folder to see queries, screenshots, and documentation of the detection logic.
 
+
 ---
 
-📆 2025
+## 👨‍💻 Author
+
+**Abhaykant Vishwakarma**
+
+Cybersecurity Enthusiast 🔐
+SOC Analyst | Threat Detection | SIEM
+
+---
+
+📆 2026
